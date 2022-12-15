@@ -1,7 +1,7 @@
 import player as p, questgenerator as q
 
 mason = p.Player("mason", q.Quest("drink water", "drink half of your water"))
-while(true): 
+while(True): 
     action = input("What do you want to do? 1. add quest 2. complete quest 3. view quests 4. view completed quests 5. view player 6. exit")
     if(action == "1"):
         name = input("What is the name of the quest?")

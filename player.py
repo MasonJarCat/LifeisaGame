@@ -15,3 +15,13 @@ class Player:
     def viewCompletedQuests(self):
         for quest in self.completedQuests:
             print(quest)
+    def completeQuest(self, name):
+        for quest in self.quest:
+            if(quest.name == name):
+                self.completedQuests.append(quest)
+                questgenerator.Quest.setComplete(quest)
+                self.quest.remove(quest)
+                print("Quest completed!")
+                break
+            else:
+                print("Quest not found!")
