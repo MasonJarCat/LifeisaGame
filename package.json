@@ -1,0 +1,24 @@
+{
+  "name": "life-is-a-game",
+  "version": "1.0.0",
+  "description": "A gamification system for personal life management",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server . -p 3000 -o",
+    "dev": "npx live-server --port=3000 --open=/",
+    "test": "echo \"No tests specified yet\" && exit 0"
+  },
+  "keywords": [
+    "gamification",
+    "productivity",
+    "life-management",
+    "quests",
+    "rewards"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  }
+}

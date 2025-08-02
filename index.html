@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life is a Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Life is a Game</h1>
+            <div class="stats-bar">
+                <div class="stat">
+                    <span class="stat-label">Level:</span>
+                    <span id="player-level">1</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">XP:</span>
+                    <span id="player-xp">0</span>
+                    <span>/</span>
+                    <span id="xp-needed">100</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Coins:</span>
+                    <span id="player-coins">0</span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="content-grid">
+                <section class="quests-section">
+                    <h2>Active Quests</h2>
+                    <div class="quest-categories">
+                        <div class="quest-category">
+                            <h3>Daily Quests</h3>
+                            <div id="daily-quests" class="quest-list">
+                                <!-- Daily quests will be dynamically generated -->
+                            </div>
+                        </div>
+                        <div class="quest-category">
+                            <h3>Weekly Quests</h3>
+                            <div id="weekly-quests" class="quest-list">
+                                <!-- Weekly quests will be dynamically generated -->
+                            </div>
+                        </div>
+                        <div class="quest-category">
+                            <h3>Stretch Goals</h3>
+                            <div id="stretch-goals" class="quest-list">
+                                <!-- Long-term goals -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <aside class="sidebar">
+                    <section class="reward-store">
+                        <h2>Reward Store</h2>
+                        <div id="rewards-list" class="rewards-grid">
+                            <!-- Rewards will be populated here -->
+                        </div>
+                    </section>
+
+                    <section class="inventory">
+                        <h2>Inventory</h2>
+                        <div id="inventory-items" class="inventory-grid">
+                            <!-- Player items will be shown here -->
+                        </div>
+                    </section>
+                </aside>
+            </div>
+        </main>
+
+        <footer>
+            <button id="add-quest-btn" class="btn btn-primary">Add Custom Quest</button>
+            <button id="reset-data-btn" class="btn btn-danger">Reset Progress</button>
+        </footer>
+    </div>
+
+    <!-- Quest Modal -->
+    <div id="quest-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add Custom Quest</h2>
+            <form id="quest-form">
+                <input type="text" id="quest-title" placeholder="Quest Title" required>
+                <textarea id="quest-description" placeholder="Quest Description"></textarea>
+                <input type="number" id="quest-xp" placeholder="XP Reward" min="1" value="10">
+                <input type="number" id="quest-coins" placeholder="Coin Reward" min="0" value="5">
+                <select id="quest-type">
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="stretch">Stretch Goal</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Add Quest</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
