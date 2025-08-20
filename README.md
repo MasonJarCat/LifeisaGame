@@ -1,6 +1,6 @@
 # LifeisaGame
 This is an attempt to gamify my life in a basic sense. 
-
+https://masonjarcat.github.io/LifeisaGame/
 ## Goals for v1
 
 - ✅ A set of cookies that store quests completed, stats, objects, so on and so forth
