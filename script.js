@@ -259,15 +259,40 @@ class GameState {
     }
 
     updateQuests() {
-        for (const [type, quests] of Object.entries(this.quests)) {
-            const container = document.getElementById(`${type}-quests`);
-            if (container) {
-                container.innerHTML = '';
-                
-                quests.forEach(quest => {
-                    const questElement = this.createQuestElement(quest);
-                    container.appendChild(questElement);
-                });
+        // Daily
+        const dailyContainer = document.getElementById('daily-quests');
+        if (dailyContainer) {
+            dailyContainer.innerHTML = '';
+            this.quests.daily.filter(q => !q.completed).forEach(quest => {
+                const questElement = this.createQuestElement(quest);
+                dailyContainer.appendChild(questElement);
+            });
+            if (this.quests.daily.filter(q => !q.completed).length === 0) {
+                dailyContainer.innerHTML = '<p style="text-align:center; color:#718096;">All daily quests completed!</p>';
+            }
+        }
+        // Weekly
+        const weeklyContainer = document.getElementById('weekly-quests');
+        if (weeklyContainer) {
+            weeklyContainer.innerHTML = '';
+            this.quests.weekly.filter(q => !q.completed).forEach(quest => {
+                const questElement = this.createQuestElement(quest);
+                weeklyContainer.appendChild(questElement);
+            });
+            if (this.quests.weekly.filter(q => !q.completed).length === 0) {
+                weeklyContainer.innerHTML = '<p style="text-align:center; color:#718096;">All weekly quests completed!</p>';
+            }
+        }
+        // Stretch Goals
+        const stretchContainer = document.getElementById('stretch-goals');
+        if (stretchContainer) {
+            stretchContainer.innerHTML = '';
+            this.quests.stretch.forEach(goal => {
+                const goalElement = this.createStretchGoalElement(goal);
+                stretchContainer.appendChild(goalElement);
+            });
+            if (this.quests.stretch.length === 0) {
+                stretchContainer.innerHTML = '<p style="text-align:center; color:#718096;">No stretch goals yet!</p>';
             }
         }
     }
@@ -295,6 +320,25 @@ class GameState {
         }
 
         return questDiv;
+    }
+
+    createStretchGoalElement(goal) {
+        const goalDiv = document.createElement('div');
+        goalDiv.className = 'quest-item';
+        goalDiv.innerHTML = `
+            <div class="quest-title">${goal.title}</div>
+            <div class="quest-description">${goal.description}</div>
+            <div class="quest-rewards">
+                <span class="reward-badge">+${goal.xp} XP</span>
+                <span class="reward-badge">+${goal.coins} coins</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: ${(goal.progress / goal.maxProgress) * 100}%"></div>
+            </div>
+            <small>Progress: ${goal.progress}/${goal.maxProgress}</small>
+        `;
+        // Optionally, add logic to increment progress
+        return goalDiv;
     }
 
     updateRewards() {
@@ -369,6 +413,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeModal = document.querySelector('.close');
     const questForm = document.getElementById('quest-form');
     const resetBtn = document.getElementById('reset-data-btn');
+    const clockDiv = document.getElementById('live-clock');
+    const tabQuests = document.getElementById('tab-quests');
+    const tabShop = document.getElementById('tab-shop');
+    const tabContentQuests = document.getElementById('tab-content-quests');
+    const tabContentShop = document.getElementById('tab-content-shop');
 
     addQuestBtn.addEventListener('click', () => {
         modal.style.display = 'block';
@@ -404,10 +453,34 @@ document.addEventListener('DOMContentLoaded', function() {
         game.resetProgress();
     });
 
+    tabQuests.addEventListener('click', () => {
+        tabQuests.classList.add('active');
+        tabShop.classList.remove('active');
+        tabContentQuests.style.display = '';
+        tabContentShop.style.display = 'none';
+    });
+    tabShop.addEventListener('click', () => {
+        tabShop.classList.add('active');
+        tabQuests.classList.remove('active');
+        tabContentShop.style.display = '';
+        tabContentQuests.style.display = 'none';
+    });
+
     // Auto-save every 30 seconds
     setInterval(() => {
         game.saveToCookies();
     }, 30000);
+
+    // Live clock update
+    function updateClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        clockDiv.textContent = `${hours}:${minutes}:${seconds}`;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
 });
 
 // Export for potential future modules
