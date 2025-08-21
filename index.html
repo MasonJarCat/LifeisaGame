@@ -32,6 +32,7 @@
         <nav class="tabs" style="display:flex; justify-content:center; margin:20px 0; gap:10px;">
             <button id="tab-quests" class="btn btn-primary active">Quests</button>
             <button id="tab-shop" class="btn btn-primary">Shop</button>
+            <button id="tab-inventory" class="btn btn-primary">Inventory</button>
         </nav>
 
         <main>
@@ -54,18 +55,40 @@
                             </div>
                         </div>
                     </section>
-                    <aside class="sidebar">
-                        <section class="inventory">
-                            <h2>Inventory</h2>
-                            <div id="inventory-items" class="inventory-grid"></div>
-                        </section>
-                    </aside>
                 </div>
+                <footer>
+                    <button id="add-quest-btn" class="btn btn-primary">Add Custom Quest</button>
+                    <button id="reset-data-btn" class="btn btn-danger">Reset Progress</button>
+                </footer>
             </div>
             <div id="tab-content-shop" style="display:none;">
                 <section class="reward-store">
                     <h2>Reward Store</h2>
                     <div id="rewards-list" class="rewards-grid"></div>
+                    <div style="margin-top:20px;">
+                        <h3>Add Shop Item</h3>
+                        <form id="shop-item-form" style="display:flex; flex-direction:column; gap:10px; max-width:300px;">
+                            <label for="shop-item-name">Name</label>
+                            <input type="text" id="shop-item-name" required>
+                            <label for="shop-item-description">Description</label>
+                            <input type="text" id="shop-item-description">
+                            <label for="shop-item-cost">Cost</label>
+                            <input type="number" id="shop-item-cost" min="1" required>
+                            <label for="shop-item-type">Type</label>
+                            <input type="text" id="shop-item-type" placeholder="item, activity, consumable">
+                            <button type="submit" class="btn btn-primary">Add Item</button>
+                        </form>
+                    </div>
+                    <div style="margin-top:30px;">
+                        <h3>Shop Tracker</h3>
+                        <div id="shop-tracker"></div>
+                    </div>
+                </section>
+            </div>
+            <div id="tab-content-inventory" style="display:none;">
+                <section class="inventory">
+                    <h2>Inventory</h2>
+                    <div id="inventory-items" class="inventory-grid"></div>
                 </section>
             </div>
         </main>
@@ -73,10 +96,7 @@
         <footer>
             <button id="add-quest-btn" class="btn btn-primary">Add Custom Quest</button>
             <button id="reset-data-btn" class="btn btn-danger">Reset Progress</button>
-        </footer>
-    </div>
-
-    <!-- Quest Modal -->
+    <!-- Footer now only in Quests tab -->
     <div id="quest-modal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>

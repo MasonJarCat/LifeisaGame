@@ -77,6 +77,7 @@ class GameState {
     // Quest Generation
     generateDailyQuests() {
         const dailyQuestTemplates = [
+            { title: "Daily Check-In", description: "Mark your attendance for today!", xp: 5, coins: 1 },
             { title: "Make Your Bed", description: "Start the day organized", xp: 10, coins: 2 },
             { title: "Drink 8 Glasses of Water", description: "Stay hydrated throughout the day", xp: 15, coins: 3 },
             { title: "Exercise for 30 Minutes", description: "Get your body moving", xp: 25, coins: 5 },
@@ -89,8 +90,14 @@ class GameState {
             { title: "Connect with a Friend", description: "Maintain relationships", xp: 15, coins: 3 }
         ];
 
-        // Select 3-5 random daily quests
-        this.quests.daily = this.getRandomQuests(dailyQuestTemplates, 4);
+        // Select 3-5 random daily quests, always include check-in
+        const randomQuests = dailyQuestTemplates.slice(1).sort(() => 0.5 - Math.random()).slice(0, 3);
+        this.quests.daily = [dailyQuestTemplates[0], ...randomQuests].map(quest => ({
+            ...quest,
+            id: this.generateQuestId(),
+            completed: false,
+            type: 'daily'
+        }));
     }
 
     generateWeeklyQuests() {
@@ -416,8 +423,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const clockDiv = document.getElementById('live-clock');
     const tabQuests = document.getElementById('tab-quests');
     const tabShop = document.getElementById('tab-shop');
+    const tabInventory = document.getElementById('tab-inventory');
     const tabContentQuests = document.getElementById('tab-content-quests');
     const tabContentShop = document.getElementById('tab-content-shop');
+    const tabContentInventory = document.getElementById('tab-content-inventory');
+    const shopItemForm = document.getElementById('shop-item-form');
+    const shopTrackerDiv = document.getElementById('shop-tracker');
 
     addQuestBtn.addEventListener('click', () => {
         modal.style.display = 'block';
@@ -456,15 +467,45 @@ document.addEventListener('DOMContentLoaded', function() {
     tabQuests.addEventListener('click', () => {
         tabQuests.classList.add('active');
         tabShop.classList.remove('active');
+        tabInventory.classList.remove('active');
         tabContentQuests.style.display = '';
         tabContentShop.style.display = 'none';
+        tabContentInventory.style.display = 'none';
     });
     tabShop.addEventListener('click', () => {
         tabShop.classList.add('active');
         tabQuests.classList.remove('active');
+        tabInventory.classList.remove('active');
         tabContentShop.style.display = '';
         tabContentQuests.style.display = 'none';
+        tabContentInventory.style.display = 'none';
     });
+    tabInventory.addEventListener('click', () => {
+        tabInventory.classList.add('active');
+        tabQuests.classList.remove('active');
+        tabShop.classList.remove('active');
+        tabContentInventory.style.display = '';
+        tabContentQuests.style.display = 'none';
+        tabContentShop.style.display = 'none';
+    });
+
+    // Shop item addition
+    if (shopItemForm) {
+        shopItemForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('shop-item-name').value;
+            const description = document.getElementById('shop-item-description').value;
+            const cost = parseInt(document.getElementById('shop-item-cost').value);
+            const type = document.getElementById('shop-item-type').value || 'item';
+            game.addShopItem({ name, description, cost, type });
+            shopItemForm.reset();
+        });
+    }
+
+    // Shop tracker logic
+    if (shopTrackerDiv) {
+        shopTrackerDiv.innerHTML = '<p>Select an item from the shop to track your progress towards it.</p>';
+    }
 
     // Auto-save every 30 seconds
     setInterval(() => {
@@ -482,6 +523,71 @@ document.addEventListener('DOMContentLoaded', function() {
     updateClock();
     setInterval(updateClock, 1000);
 });
+
+// Add shop tracker state to GameState
+GameState.prototype.trackedShopItemId = null;
+
+GameState.prototype.addShopItem = function(item) {
+    const newId = this.rewards.length ? Math.max(...this.rewards.map(r => r.id)) + 1 : 1;
+    this.rewards.push({ id: newId, ...item });
+    this.saveToCookies();
+    this.updateUI();
+};
+
+// Update rewards to allow tracking
+GameState.prototype.updateRewards = function() {
+    const container = document.getElementById('rewards-list');
+    container.innerHTML = '';
+    this.rewards.forEach(reward => {
+        const rewardDiv = document.createElement('div');
+        rewardDiv.className = `reward-item ${this.player.coins >= reward.cost ? 'affordable' : ''}`;
+        rewardDiv.innerHTML = `
+            <div class="reward-name">${reward.name}</div>
+            <div class="reward-description">${reward.description}</div>
+            <div class="reward-cost">${reward.cost} coins</div>
+            <button class="btn btn-secondary" data-track-id="${reward.id}">Track</button>
+        `;
+        if (this.player.coins >= reward.cost) {
+            rewardDiv.addEventListener('click', (e) => {
+                if (e.target && e.target.matches('button[data-track-id]')) return;
+                this.purchaseReward(reward.id);
+            });
+        }
+        // Track button
+        rewardDiv.querySelector('button[data-track-id]').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.trackedShopItemId = reward.id;
+            this.updateShopTracker();
+        });
+        container.appendChild(rewardDiv);
+    });
+    this.updateShopTracker();
+};
+
+GameState.prototype.updateShopTracker = function() {
+    const trackerDiv = document.getElementById('shop-tracker');
+    if (!trackerDiv) return;
+    if (!this.trackedShopItemId) {
+        trackerDiv.innerHTML = '<p>Select an item from the shop to track your progress towards it.</p>';
+        return;
+    }
+    const item = this.rewards.find(r => r.id === this.trackedShopItemId);
+    if (!item) {
+        trackerDiv.innerHTML = '<p>Tracked item not found.</p>';
+        return;
+    }
+    const percent = Math.min(100, Math.round((this.player.coins / item.cost) * 100));
+    trackerDiv.innerHTML = `
+        <div><strong>${item.name}</strong></div>
+        <div>${item.description}</div>
+        <div>Cost: ${item.cost} coins</div>
+        <div>Current coins: ${this.player.coins}</div>
+        <div class="progress-bar" style="margin-top:10px;">
+            <div class="progress-fill" style="width:${percent}%;"></div>
+        </div>
+        <div>${percent}% complete</div>
+    `;
+};
 
 // Export for potential future modules
 window.LifeGame = GameState;
