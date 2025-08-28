@@ -466,34 +466,36 @@ document.addEventListener('DOMContentLoaded', function() {
         game.resetProgress();
     });
 
-    // Tab switching logic
-    tabQuests.addEventListener('click', () => {
-        tabQuests.classList.add('active');
-        tabShop.classList.remove('active');
-        tabInventory.classList.remove('active');
-        tabContentQuests.style.display = '';
-        tabContentShop.style.display = 'none';
-        tabContentInventory.style.display = 'none';
-        if (menuContent) menuContent.style.display = 'none';
-    });
-    tabShop.addEventListener('click', () => {
-        tabShop.classList.add('active');
-        tabQuests.classList.remove('active');
-        tabInventory.classList.remove('active');
-        tabContentShop.style.display = '';
-        tabContentQuests.style.display = 'none';
-        tabContentInventory.style.display = 'none';
-        if (menuContent) menuContent.style.display = 'none';
-    });
-    tabInventory.addEventListener('click', () => {
-        tabInventory.classList.add('active');
-        tabQuests.classList.remove('active');
-        tabShop.classList.remove('active');
-        tabContentInventory.style.display = '';
-        tabContentQuests.style.display = 'none';
-        tabContentShop.style.display = 'none';
-        if (menuContent) menuContent.style.display = 'none';
-    });
+    // Tab switching logic with null checks
+    if (tabQuests && tabShop && tabInventory && tabContentQuests && tabContentShop && tabContentInventory) {
+        tabQuests.addEventListener('click', () => {
+            tabQuests.classList.add('active');
+            tabShop.classList.remove('active');
+            tabInventory.classList.remove('active');
+            tabContentQuests.style.display = '';
+            tabContentShop.style.display = 'none';
+            tabContentInventory.style.display = 'none';
+            if (menuContent) menuContent.style.display = 'none';
+        });
+        tabShop.addEventListener('click', () => {
+            tabShop.classList.add('active');
+            tabQuests.classList.remove('active');
+            tabInventory.classList.remove('active');
+            tabContentShop.style.display = '';
+            tabContentQuests.style.display = 'none';
+            tabContentInventory.style.display = 'none';
+            if (menuContent) menuContent.style.display = 'none';
+        });
+        tabInventory.addEventListener('click', () => {
+            tabInventory.classList.add('active');
+            tabQuests.classList.remove('active');
+            tabShop.classList.remove('active');
+            tabContentInventory.style.display = '';
+            tabContentQuests.style.display = 'none';
+            tabContentShop.style.display = 'none';
+            if (menuContent) menuContent.style.display = 'none';
+        });
+    }
 
     // Menu dropdown logic
     if (menuBtn && menuContent) {
