@@ -434,40 +434,52 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (addQuestBtn) {
         addQuestBtn.addEventListener('click', () => {
-            modal.style.display = 'block';
+            if (modal) modal.style.display = 'block';
         });
     }
 
-    closeModal.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
-
-    window.addEventListener('click', (event) => {
-        if (event.target === modal) {
+    if (closeModal && modal) {
+        closeModal.addEventListener('click', () => {
             modal.style.display = 'none';
-        }
-    });
+        });
+    }
 
-    questForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const questData = {
-            title: document.getElementById('quest-title').value,
-            description: document.getElementById('quest-description').value,
-            xp: parseInt(document.getElementById('quest-xp').value),
-            coins: parseInt(document.getElementById('quest-coins').value),
-            type: document.getElementById('quest-type').value
-        };
+    if (window && modal) {
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
 
-        game.addCustomQuest(questData);
-        modal.style.display = 'none';
-        questForm.reset();
-    });
+    if (questForm) {
+        questForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const titleEl = document.getElementById('quest-title');
+            const descEl = document.getElementById('quest-description');
+            const xpEl = document.getElementById('quest-xp');
+            const coinsEl = document.getElementById('quest-coins');
+            const typeEl = document.getElementById('quest-type');
+            if (titleEl && descEl && xpEl && coinsEl && typeEl) {
+                const questData = {
+                    title: titleEl.value,
+                    description: descEl.value,
+                    xp: parseInt(xpEl.value),
+                    coins: parseInt(coinsEl.value),
+                    type: typeEl.value
+                };
+                game.addCustomQuest(questData);
+                if (modal) modal.style.display = 'none';
+                questForm.reset();
+            }
+        });
+    }
 
-    resetBtn.addEventListener('click', () => {
-        game.resetProgress();
-    });
-
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            game.resetProgress();
+        });
+    }
     // Tab switching logic with robust null checks
     if (tabQuests && tabQuests.addEventListener) {
         tabQuests.addEventListener('click', () => {
@@ -478,7 +490,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 tabContentQuests.style.display = '';
                 tabContentShop.style.display = 'none';
                 tabContentInventory.style.display = 'none';
-                if (menuContent) menuContent.style.display = 'none';
+                if (typeof menuContent !== 'undefined' && menuContent) menuContent.style.display = 'none';
             }
         });
     }
@@ -491,7 +503,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 tabContentShop.style.display = '';
                 tabContentQuests.style.display = 'none';
                 tabContentInventory.style.display = 'none';
-                if (menuContent) menuContent.style.display = 'none';
+                if (typeof menuContent !== 'undefined' && menuContent) menuContent.style.display = 'none';
             }
         });
     }
@@ -504,13 +516,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 tabContentInventory.style.display = '';
                 tabContentQuests.style.display = 'none';
                 tabContentShop.style.display = 'none';
-                if (menuContent) menuContent.style.display = 'none';
+                if (typeof menuContent !== 'undefined' && menuContent) menuContent.style.display = 'none';
             }
         });
     }
-
     // Menu dropdown logic with robust null checks
-    if (menuBtn && menuBtn.addEventListener && menuContent) {
+    if (typeof menuBtn !== 'undefined' && menuBtn && typeof menuContent !== 'undefined' && menuContent) {
         menuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             menuContent.style.display = menuContent.style.display === 'none' || menuContent.style.display === '' ? 'block' : 'none';
@@ -521,25 +532,28 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
     // Shop item addition
     if (shopItemForm) {
         shopItemForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            const name = document.getElementById('shop-item-name').value;
-            const description = document.getElementById('shop-item-description').value;
-            const cost = parseInt(document.getElementById('shop-item-cost').value);
-            const type = document.getElementById('shop-item-type').value || 'item';
-            game.addShopItem({ name, description, cost, type });
-            shopItemForm.reset();
+            const nameEl = document.getElementById('shop-item-name');
+            const descEl = document.getElementById('shop-item-description');
+            const costEl = document.getElementById('shop-item-cost');
+            const typeEl = document.getElementById('shop-item-type');
+            if (nameEl && costEl) {
+                const name = nameEl.value;
+                const description = descEl ? descEl.value : '';
+                const cost = parseInt(costEl.value);
+                const type = typeEl ? typeEl.value : 'item';
+                game.addShopItem({ name, description, cost, type });
+                shopItemForm.reset();
+            }
         });
     }
-
     // Shop tracker logic
     if (shopTrackerDiv) {
         shopTrackerDiv.innerHTML = '<p>Select an item from the shop to track your progress towards it.</p>';
     }
-
     // Export and Import functionality
     if (exportBtn) {
         exportBtn.addEventListener('click', () => {
@@ -561,7 +575,6 @@ document.addEventListener('DOMContentLoaded', function() {
             URL.revokeObjectURL(url);
         });
     }
-
     if (importFile) {
         importFile.addEventListener('change', (e) => {
             const file = e.target.files[0];
@@ -589,22 +602,22 @@ document.addEventListener('DOMContentLoaded', function() {
             reader.readAsText(file);
         });
     }
-
     // Auto-save every 30 seconds
     setInterval(() => {
         game.saveToCookies();
     }, 30000);
-
     // Live clock update
-    function updateClock() {
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        clockDiv.textContent = `${hours}:${minutes}:${seconds}`;
+    if (clockDiv) {
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            clockDiv.textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
     }
-    updateClock();
-    setInterval(updateClock, 1000);
 });
 
 // Add shop tracker state to GameState
