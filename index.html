@@ -26,10 +26,15 @@
                     <span class="stat-label">Coins:</span>
                     <span id="player-coins">0</span>
                 </div>
-            </div>
-        </header>
-
-        <nav class="tabs" style="display:flex; justify-content:center; margin:20px 0; gap:10px;">
+                <footer style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:20px;">
+                    <button id="add-quest-btn" class="btn btn-primary">Add Custom Quest</button>
+                    <button id="reset-data-btn" class="btn btn-danger">Reset Progress</button>
+                    <button id="export-btn" class="btn btn-secondary">Export Data</button>
+                    <label for="import-file" class="btn btn-secondary" style="margin-bottom:0; cursor:pointer;">
+                        Import Data
+                        <input type="file" id="import-file" accept="application/json" style="display:none;">
+                    </label>
+                </footer>
             <button id="tab-quests" class="btn btn-primary active">Quests</button>
             <button id="tab-shop" class="btn btn-primary">Shop</button>
             <button id="tab-inventory" class="btn btn-primary">Inventory</button>
@@ -56,10 +61,7 @@
                         </div>
                     </section>
                 </div>
-                <footer>
-                    <button id="add-quest-btn" class="btn btn-primary">Add Custom Quest</button>
-                    <button id="reset-data-btn" class="btn btn-danger">Reset Progress</button>
-                </footer>
+            <!-- Footer now only in Quests tab -->
             </div>
             <div id="tab-content-shop" style="display:none;">
                 <section class="reward-store">

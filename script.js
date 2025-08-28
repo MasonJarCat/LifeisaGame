@@ -429,6 +429,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const tabContentInventory = document.getElementById('tab-content-inventory');
     const shopItemForm = document.getElementById('shop-item-form');
     const shopTrackerDiv = document.getElementById('shop-tracker');
+    const exportBtn = document.getElementById('export-btn');
+    const importFile = document.getElementById('import-file');
 
     addQuestBtn.addEventListener('click', () => {
         modal.style.display = 'block';
@@ -505,6 +507,56 @@ document.addEventListener('DOMContentLoaded', function() {
     // Shop tracker logic
     if (shopTrackerDiv) {
         shopTrackerDiv.innerHTML = '<p>Select an item from the shop to track your progress towards it.</p>';
+    }
+
+    // Export and Import functionality
+    if (exportBtn) {
+        exportBtn.addEventListener('click', () => {
+            const exportData = {
+                player: game.player,
+                quests: game.quests,
+                rewards: game.rewards,
+                completedQuests: game.completedQuests,
+                trackedShopItemId: game.trackedShopItemId
+            };
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'lifeisagame-data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    }
+
+    if (importFile) {
+        importFile.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const imported = JSON.parse(evt.target.result);
+                    if (imported.player && imported.quests) {
+                        game.player = imported.player;
+                        game.quests = imported.quests;
+                        game.rewards = imported.rewards || game.rewards;
+                        game.completedQuests = imported.completedQuests || [];
+                        game.trackedShopItemId = imported.trackedShopItemId || null;
+                        game.saveToCookies();
+                        game.updateUI();
+                        alert('Data imported successfully!');
+                    } else {
+                        alert('Invalid data file.');
+                    }
+                } catch (err) {
+                    alert('Error importing file.');
+                }
+            };
+            reader.readAsText(file);
+        });
     }
 
     // Auto-save every 30 seconds
