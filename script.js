@@ -431,6 +431,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const shopTrackerDiv = document.getElementById('shop-tracker');
     const exportBtn = document.getElementById('export-btn');
     const importFile = document.getElementById('import-file');
+    const menuBtn = document.getElementById('menu-btn');
+    const menuContent = document.getElementById('menu-content');
 
     if (addQuestBtn) {
         addQuestBtn.addEventListener('click', () => {
@@ -490,7 +492,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 tabContentQuests.style.display = '';
                 tabContentShop.style.display = 'none';
                 tabContentInventory.style.display = 'none';
-                if (typeof menuContent !== 'undefined' && menuContent) menuContent.style.display = 'none';
+                if (menuContent) menuContent.style.display = 'none';
             }
         });
     }
@@ -503,7 +505,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 tabContentShop.style.display = '';
                 tabContentQuests.style.display = 'none';
                 tabContentInventory.style.display = 'none';
-                if (typeof menuContent !== 'undefined' && menuContent) menuContent.style.display = 'none';
+                if (menuContent) menuContent.style.display = 'none';
             }
         });
     }
@@ -516,12 +518,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 tabContentInventory.style.display = '';
                 tabContentQuests.style.display = 'none';
                 tabContentShop.style.display = 'none';
-                if (typeof menuContent !== 'undefined' && menuContent) menuContent.style.display = 'none';
+                if (menuContent) menuContent.style.display = 'none';
             }
         });
     }
     // Menu dropdown logic with robust null checks
-    if (typeof menuBtn !== 'undefined' && menuBtn && typeof menuContent !== 'undefined' && menuContent) {
+    if (menuBtn && menuContent) {
         menuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             menuContent.style.display = menuContent.style.display === 'none' || menuContent.style.display === '' ? 'block' : 'none';
