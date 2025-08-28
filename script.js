@@ -432,9 +432,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const exportBtn = document.getElementById('export-btn');
     const importFile = document.getElementById('import-file');
 
-    addQuestBtn.addEventListener('click', () => {
-        modal.style.display = 'block';
-    });
+    if (addQuestBtn) {
+        addQuestBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
+        });
+    }
 
     closeModal.addEventListener('click', () => {
         modal.style.display = 'none';
@@ -466,39 +468,49 @@ document.addEventListener('DOMContentLoaded', function() {
         game.resetProgress();
     });
 
-    // Tab switching logic with null checks
-    if (tabQuests && tabShop && tabInventory && tabContentQuests && tabContentShop && tabContentInventory) {
+    // Tab switching logic with robust null checks
+    if (tabQuests && tabQuests.addEventListener) {
         tabQuests.addEventListener('click', () => {
-            tabQuests.classList.add('active');
-            tabShop.classList.remove('active');
-            tabInventory.classList.remove('active');
-            tabContentQuests.style.display = '';
-            tabContentShop.style.display = 'none';
-            tabContentInventory.style.display = 'none';
-            if (menuContent) menuContent.style.display = 'none';
+            if (tabQuests && tabShop && tabInventory && tabContentQuests && tabContentShop && tabContentInventory) {
+                tabQuests.classList.add('active');
+                tabShop.classList.remove('active');
+                tabInventory.classList.remove('active');
+                tabContentQuests.style.display = '';
+                tabContentShop.style.display = 'none';
+                tabContentInventory.style.display = 'none';
+                if (menuContent) menuContent.style.display = 'none';
+            }
         });
+    }
+    if (tabShop && tabShop.addEventListener) {
         tabShop.addEventListener('click', () => {
-            tabShop.classList.add('active');
-            tabQuests.classList.remove('active');
-            tabInventory.classList.remove('active');
-            tabContentShop.style.display = '';
-            tabContentQuests.style.display = 'none';
-            tabContentInventory.style.display = 'none';
-            if (menuContent) menuContent.style.display = 'none';
+            if (tabQuests && tabShop && tabInventory && tabContentQuests && tabContentShop && tabContentInventory) {
+                tabShop.classList.add('active');
+                tabQuests.classList.remove('active');
+                tabInventory.classList.remove('active');
+                tabContentShop.style.display = '';
+                tabContentQuests.style.display = 'none';
+                tabContentInventory.style.display = 'none';
+                if (menuContent) menuContent.style.display = 'none';
+            }
         });
+    }
+    if (tabInventory && tabInventory.addEventListener) {
         tabInventory.addEventListener('click', () => {
-            tabInventory.classList.add('active');
-            tabQuests.classList.remove('active');
-            tabShop.classList.remove('active');
-            tabContentInventory.style.display = '';
-            tabContentQuests.style.display = 'none';
-            tabContentShop.style.display = 'none';
-            if (menuContent) menuContent.style.display = 'none';
+            if (tabQuests && tabShop && tabInventory && tabContentQuests && tabContentShop && tabContentInventory) {
+                tabInventory.classList.add('active');
+                tabQuests.classList.remove('active');
+                tabShop.classList.remove('active');
+                tabContentInventory.style.display = '';
+                tabContentQuests.style.display = 'none';
+                tabContentShop.style.display = 'none';
+                if (menuContent) menuContent.style.display = 'none';
+            }
         });
     }
 
-    // Menu dropdown logic
-    if (menuBtn && menuContent) {
+    // Menu dropdown logic with robust null checks
+    if (menuBtn && menuBtn.addEventListener && menuContent) {
         menuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             menuContent.style.display = menuContent.style.display === 'none' || menuContent.style.display === '' ? 'block' : 'none';
