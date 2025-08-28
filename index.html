@@ -26,18 +26,22 @@
                     <span class="stat-label">Coins:</span>
                     <span id="player-coins">0</span>
                 </div>
-                <footer style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:20px;">
-                    <button id="add-quest-btn" class="btn btn-primary">Add Custom Quest</button>
-                    <button id="reset-data-btn" class="btn btn-danger">Reset Progress</button>
-                    <button id="export-btn" class="btn btn-secondary">Export Data</button>
-                    <label for="import-file" class="btn btn-secondary" style="margin-bottom:0; cursor:pointer;">
+            </div>
+            <div class="menu-dropdown" style="position:absolute; right:20px; top:20px;">
+                <button id="menu-btn" class="btn btn-secondary" style="padding:8px 16px;">☰</button>
+                <div id="menu-content" style="display:none; position:absolute; right:0; background:white; border:1px solid #e2e8f0; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); min-width:160px; z-index:10;">
+                    <button id="export-btn" class="btn btn-secondary" style="width:100%; text-align:left;">Export Data</button>
+                    <label for="import-file" class="btn btn-secondary" style="width:100%; text-align:left; margin-bottom:0; cursor:pointer;">
                         Import Data
                         <input type="file" id="import-file" accept="application/json" style="display:none;">
                     </label>
-                </footer>
+                </div>
+            </div>
+        <nav class="tabs" style="display:flex; justify-content:center; margin:20px 0; gap:10px;">
             <button id="tab-quests" class="btn btn-primary active">Quests</button>
             <button id="tab-shop" class="btn btn-primary">Shop</button>
             <button id="tab-inventory" class="btn btn-primary">Inventory</button>
+        </nav>
         </nav>
 
         <main>
@@ -95,9 +99,7 @@
             </div>
         </main>
 
-        <footer>
-            <button id="add-quest-btn" class="btn btn-primary">Add Custom Quest</button>
-            <button id="reset-data-btn" class="btn btn-danger">Reset Progress</button>
+    <!-- Footer now only in Quests tab -->
     <!-- Footer now only in Quests tab -->
     <div id="quest-modal" class="modal">
         <div class="modal-content">

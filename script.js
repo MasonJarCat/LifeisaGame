@@ -574,6 +574,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     updateClock();
     setInterval(updateClock, 1000);
+
+    // Menu dropdown logic
+    const menuBtn = document.getElementById('menu-btn');
+    const menuContent = document.getElementById('menu-content');
+    if (menuBtn && menuContent) {
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuContent.style.display = menuContent.style.display === 'none' || menuContent.style.display === '' ? 'block' : 'none';
+        });
+        document.addEventListener('click', (e) => {
+            if (!menuContent.contains(e.target) && e.target !== menuBtn) {
+                menuContent.style.display = 'none';
+            }
+        });
+    }
 });
 
 // Add shop tracker state to GameState
