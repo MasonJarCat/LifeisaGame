@@ -466,6 +466,7 @@ document.addEventListener('DOMContentLoaded', function() {
         game.resetProgress();
     });
 
+    // Tab switching logic
     tabQuests.addEventListener('click', () => {
         tabQuests.classList.add('active');
         tabShop.classList.remove('active');
@@ -473,6 +474,7 @@ document.addEventListener('DOMContentLoaded', function() {
         tabContentQuests.style.display = '';
         tabContentShop.style.display = 'none';
         tabContentInventory.style.display = 'none';
+        if (menuContent) menuContent.style.display = 'none';
     });
     tabShop.addEventListener('click', () => {
         tabShop.classList.add('active');
@@ -481,6 +483,7 @@ document.addEventListener('DOMContentLoaded', function() {
         tabContentShop.style.display = '';
         tabContentQuests.style.display = 'none';
         tabContentInventory.style.display = 'none';
+        if (menuContent) menuContent.style.display = 'none';
     });
     tabInventory.addEventListener('click', () => {
         tabInventory.classList.add('active');
@@ -489,7 +492,21 @@ document.addEventListener('DOMContentLoaded', function() {
         tabContentInventory.style.display = '';
         tabContentQuests.style.display = 'none';
         tabContentShop.style.display = 'none';
+        if (menuContent) menuContent.style.display = 'none';
     });
+
+    // Menu dropdown logic
+    if (menuBtn && menuContent) {
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuContent.style.display = menuContent.style.display === 'none' || menuContent.style.display === '' ? 'block' : 'none';
+        });
+        document.addEventListener('click', (e) => {
+            if (!menuContent.contains(e.target) && e.target !== menuBtn) {
+                menuContent.style.display = 'none';
+            }
+        });
+    }
 
     // Shop item addition
     if (shopItemForm) {
@@ -574,21 +591,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     updateClock();
     setInterval(updateClock, 1000);
-
-    // Menu dropdown logic
-    const menuBtn = document.getElementById('menu-btn');
-    const menuContent = document.getElementById('menu-content');
-    if (menuBtn && menuContent) {
-        menuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            menuContent.style.display = menuContent.style.display === 'none' || menuContent.style.display === '' ? 'block' : 'none';
-        });
-        document.addEventListener('click', (e) => {
-            if (!menuContent.contains(e.target) && e.target !== menuBtn) {
-                menuContent.style.display = 'none';
-            }
-        });
-    }
 });
 
 // Add shop tracker state to GameState
